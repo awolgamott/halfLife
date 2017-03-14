@@ -10,23 +10,24 @@ var HalfLife = React.createClass({
 	 	)
  	}
 })
-
+//main component to control inputs & calculate factor level
 var Dashboard = React.createClass({
-
+	//this is the actual thing that returns percentage based on weight, dosage given, time since dose given and half life
 	calculateFactorLevel: function(){
+		//current dose is =dose * 0.5 to the factor of (number of hours/half life)
 		var currentDose = this.state.dose * .5 ** (this.state.numberOfHoursAgo / this.state.halfLifeInHours);
+		//full dose is how factor amount to be given is determined based on weight and what percent you want to go to
 		var fullDose = (this.state.weight / 4.4) * 100
-		//console.log(this.state)
-		// =765 * 0.5^(B3/6)
+		//we have to do current dose/ full dose because we need to find actual % and not decimal
 		var percentage = (currentDose / fullDose) * 100
-
+		//rounds to whole integer and if anything was determined to be zero
 		if (percentage > 0){
 			return Math.round(percentage,0)
 		} else {
 			return 0
 		}
 	},
-
+	//this sets the weight per user input
 	_weight: function(event) {
 		if (parseInt(event.target.value) < 0){
 			return;
@@ -35,7 +36,7 @@ var Dashboard = React.createClass({
 			weight: parseInt(event.target.value)
 		})
 	},
-	
+	//this sets the amount of hours ago the dose was given per user input
 	_time: function(event) {
 		if (parseInt(event.target.value) < 0){
 			return;
@@ -44,19 +45,20 @@ var Dashboard = React.createClass({
 			numberOfHoursAgo: parseInt(event.target.value)
 		})
 	},
-
+	//this sets the dosage amount per user selection (will be changed in future to allow user to type in)
 	_dose: function(event) {
 		this.setState({
 			dose: (event.target.value)
 		})
 	},
-
+	//this sets the half life per user input. default is 12 as that's the advertised halflife for drug 
+	//in question, though some people metabolize differently and half a smaller half life. (will allow more inputs later)
 	_halfLifeHours: function(event) {
 		this.setState({
 			halfLifeInHours: (event.target.value)
 		})
 	},
-
+	//the initial state of all the inputs
 	getInitialState: function() {
 		return {
 			weight: 0,
@@ -67,12 +69,11 @@ var Dashboard = React.createClass({
 	},
 
 	 render: function() {
-
+	 	//every time state changes, get percentage.
 	 	var factorLevelPercentage = this.calculateFactorLevel()
+	 	//the dude will have two classes always: dude and the class of dude based on percentage
 	 	var dudeClassToUse = "dude"
-
-	 	console.log("factorLevelPercentage", factorLevelPercentage)
-
+	 	//image only has every 5th percentage, could be a calculation later
 	 	if (factorLevelPercentage > 95){
 	 		dudeClassToUse += " dude-100"
 	 	} else if (factorLevelPercentage > 90){
@@ -119,10 +120,12 @@ var Dashboard = React.createClass({
 
 	 	return (
 	 		<div className='dashboard' >
-	 		
+	 		{/*displays the dude and moves it around the background via sprite technique*/}
 	 		<div className={dudeClassToUse}>
+	 		{/*instead of showing the 0,5,10% in the default pic we are showing an actual percentage*/}
 	 			<div className="percentage">{factorLevelPercentage}%</div>
 	 		</div>
+	 			
 	 			<div className='buttons'>
 	 				<div>
 		 				<label>Current Weight</label>

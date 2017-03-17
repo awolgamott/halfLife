@@ -15,7 +15,7 @@ var Dashboard = React.createClass({
 	//this is the actual thing that returns percentage based on weight, dosage given, time since dose given and half life
 	calculateFactorLevel: function(){
 		//current dose is =dose * 0.5 to the factor of (number of hours/half life)
-		var currentDose = this.state.dose * .5 ** (this.state.numberOfHoursAgo / this.state.halfLifeInHours);
+		var currentDose = this.state.dose * Math.pow(.5, (this.state.numberOfHoursAgo / this.state.halfLifeInHours));
 		//full dose is how factor amount to be given is determined based on weight and what percent you want to go to
 		var fullDose = (this.state.weight / 4.4) * 100
 		//we have to do current dose/ full dose because we need to find actual % and not decimal
